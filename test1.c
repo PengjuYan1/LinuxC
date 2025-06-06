@@ -16,6 +16,20 @@
 *     fib(0) = 1
 *     fib(1) = 1
 *     fib(n) = fib(n - 1) + fib(n - 2)
+* q7.使用循环实现q5, q6。
+* q8.编写程序数一下1到100的所有整数出现多少次数字9。
+* q9.求1-100的素数，不使用break和continue
+* q10.打印99乘法表
+* q11.打印菱形
+* q12. rational.c
+* q13. complex.c
+* q14. 编写一个程序，定义两个类型和长度都相同的数组，将其中一个数组的所有
+*       元素拷贝给另一个
+* q15. 使用rand函数生成10-20之间的随机整数
+* q16. 可视化数组直方图，histogram.c
+* q17. 定义一个数组，编程打印它的全排列
+* q18. 再定义一个常量M表示从N个数中取几个数做排列，如何修改q17程序
+* q19. 如果要求从N个数中取M个数做组合而不是做排列，应该如何实现
 */
 
 void q1(void)  
@@ -88,6 +102,7 @@ int gcd(int a, int b)
 
 void q5(void)
 {
+  int gcd_loop(int, int);
   // int a, b;
   // scanf("%d%d", &a, &b);
   // int c = GCD(a, b);
@@ -115,7 +130,7 @@ void q5(void)
   {
     int a = test_cases[i][0];
     int b = test_cases[i][1];
-    int result = gcd(a, b);
+    int result = gcd_loop(a, b);
     int expected = test_cases[i][2];
     printf("gcd(%d, %d) = %d [%s]\n", 
             a, b, result,
@@ -133,7 +148,7 @@ int fib(int n)
 
 void q6(void)
 {
-  // 测试用例数组：{输入n, 期望输出}
+  int fib_loop(int);  // 测试用例数组：{输入n, 期望输出}
     int test_cases[][2] = {
         {0, 1},     // fib(0) = 1
         {1, 1},     // fib(1) = 1
@@ -152,12 +167,210 @@ void q6(void)
   for(int i = 0; i < sizeof(test_cases)/sizeof(test_cases[0]); i++)
   {
     int expected = test_cases[i][1];
-    int result = fib(test_cases[i][0]);
+    int result = fib_loop(test_cases[i][0]);
     printf("fib(%d) = %d [%s]\n", 
             test_cases[i][0], result,
             result == expected ? "正确" : "错误");
   }
 
+}
+
+int gcd_loop(int a, int b)
+{
+  if(b == 0)
+    return abs(a);
+  do
+  {
+    int tmp = a;
+    a = b;
+    b = tmp%b;
+  }while(b != 0);
+  return abs(a);
+}
+
+int fib_loop(int n)
+{
+  if(n == 0 || n == 1)
+      return 1;
+
+  int a = 1, b = 1, cnt = 1;
+  while(cnt != n)
+  {
+    cnt++;
+    int tmp = a;
+    a = a + b;
+    b = tmp;
+  }
+  return a;
+}
+
+void q8(void)
+{
+  int num = 1, cnt = 0;
+  while(num <= 100)
+  {
+    if(num%10 == 9)
+      cnt++;
+    if(num/10 == 9)
+      cnt++;
+    num++;
+  }
+  printf("%d\n", cnt);
+}
+
+void q9(void)
+{
+//素数是指大于1的自然数，且除了1和它本身外，没有其它正因数
+  int flag = 0;
+  for(int i = 2; i <=100; i++)
+  {
+    flag = 0;
+    for(int j = 2; j<=i; j++)
+    {
+      if(i%j==0 && i!=j)
+      {
+        flag=1;
+        j = i+1; //提前结束循环
+      }        
+    }
+    if(!flag)
+    {
+      printf("%d ", i);
+    }
+  }
+    
+}
+
+void q10(void)
+{
+  for(int i = 1; i < 10; i++)
+  {
+    for(int j = 1; j <= i; j++)
+    {
+      printf("%-5d", i*j);
+    }
+    printf("\n");
+  }
+}
+
+void diamond(int n, char flag)
+{
+  //打印上半部分
+  for(int i = 0; i<(n/2+1); i++)
+  {
+    for(int j = 0; j < n; j++)
+    {
+      if(j >= (n/2) - i && j <= (n/2)+i)
+        printf("%c ", flag);
+      else 
+        printf("%c ", ' ');
+    }
+    printf("\n");
+
+  }
+  //打印下半部分
+  for(int i = 0; i<(n/2); i++)
+  {
+    for(int j = 0; j < n; j++)
+    {
+      if(j >= i+1 && j < n - i - 1) 
+        printf("%c ", flag);
+      else 
+        printf("%c ", ' ');  
+    }
+    printf("\n");
+  }
+}
+
+void q14(void)
+{
+  int arr1[3] = {1, 2, 3};
+  int arr2[3] = {0};
+  for(int i = 0; i < sizeof(arr1)/sizeof(int); i++)
+  {
+    arr2[i] = arr1[i];
+    printf("%d ", arr2[i]);
+  }
+
+}
+
+void q15(void)
+{
+  //取余的结果范围是[0, 除数-1]
+  int arr[10] = {0};
+  int upper_bound = 11;
+  for(int i = 0; i < 10; i++)
+  {
+    arr[i] = rand()%11 + 10;
+    printf("%d ", arr[i]);
+  }
+
+
+}
+
+#define N 5
+#define M 3
+void swap(int *a, int *b)
+{
+  int tmp = *a;
+  *a = *b;
+  *b = tmp;
+}
+
+void arrange(int *arr, int start, int end)
+{
+  if(start == end)
+  {
+    for(int i = 0; i <= end; i++)
+    {
+      printf("%d ", arr[i]);
+    }
+  }
+  else
+  {
+    for(int i = start; i <= end; i++)
+    {
+      swap(&arr[start], &arr[i]);
+
+      arrange(arr, start + 1, end);
+
+      swap(&arr[start], &arr[i]);
+    }
+  }
+}
+int cnt = 0;
+void Anm(int *arr, int n, int m)
+{
+  if(m == 0)
+  {
+    for(int i = 0; i < M; i++)
+    {
+      printf("%d ", *(arr - M + i));
+    }
+    cnt++;
+    printf(": %d\n", cnt);
+  }
+  if(n < m) return;
+  for(int i = 0; i < n; i++)
+  {
+    swap(arr, arr + i);
+    Anm(arr + 1, n - 1, m - 1);
+    swap(arr, arr + i);
+  }
+  
+}
+
+void Cnm(int *arr, int n, int m)
+{
+  if(m == 0)
+  {
+    swap
+  }
+  if(n < m) return;
+  for(int i = 0; i < n; i++)
+  {
+    Cnm(arr+1, n - 1; m - 1);
+  }
 }
 
 int main(void)
@@ -167,6 +380,17 @@ int main(void)
   //q3();
   //q4();
   //q5();
-  q6();
+  //q6();
+  //q8();
+  //q9();
+  //q10();
+  //diamond(21, '-');
+  //q14();
+  //q15();
+  int arr[N] = {1, 2, 3, 4, 5};
+  //arrange(arr, 0, N - 1);
+  Anm(arr, N, M);
   return 0;
 }
+
+
