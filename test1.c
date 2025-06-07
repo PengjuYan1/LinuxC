@@ -360,16 +360,23 @@ void Anm(int *arr, int n, int m)
   
 }
 
-void Cnm(int *arr, int n, int m)
+void Cnm(int *arr, int n, int m, int start, int *data, int data_index)
 {
-  if(m == 0)
+  // 选取m个元素：打印组合
+  if(data_index == m)
   {
-    swap
+    for(int i = 0; i < m; i++)
+    {
+      printf("%d ", data[i]);
+    }
+    printf("\n");
+    return;
   }
-  if(n < m) return;
-  for(int i = 0; i < n; i++)
+  //遍历所有可能的选择
+  for(int i = start; i < n; i++)
   {
-    Cnm(arr+1, n - 1; m - 1);
+    data[data_index] = arr[i];
+    Cnm(arr, n, m, i + 1, data, data_index + 1);
   }
 }
 
@@ -388,8 +395,10 @@ int main(void)
   //q14();
   //q15();
   int arr[N] = {1, 2, 3, 4, 5};
+  int data[M];
   //arrange(arr, 0, N - 1);
-  Anm(arr, N, M);
+  //Anm(arr, N, M);
+  Cnm(arr, N, M, 0, data, 0);
   return 0;
 }
 
