@@ -18,16 +18,56 @@
 
 void q1(int *arr)
 {
+  int min = arr[0];
   for(int i = 0; i < N; i++)
   {
-    printf("%d ", arr[i]);
+    if(arr[i] < min)
+      min = arr[i];
+  }
+    printf("%d ", min);
+}
+
+int partition(int *arr, int p, int r)
+{
+  int x = arr[p];
+  int i = p;
+  for(int j = p + 1; j <= r; j++)
+  {
+    if(arr[j] <= x)
+    {
+      i++;
+      int tmp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = tmp;
+    }
+  }
+  int tmp = arr[i];
+  arr[i] = arr[p];
+  arr[p] = tmp;
+  return i;
+}
+
+//从p到q之间找到第k小的元素
+int order_statistic(int *arr, int p, int r, int k)
+{
+  int mid = partition(arr, p, r);
+  int i = mid - p + 1; //pivot是第几小的
+  if(k == i)
+    return arr[i];
+  else if(k > i)
+  {
+    return order_statistic(arr, mid + 1, r, k - i);
+  }
+  else
+  {
+    return order_statistic(arr, p, mid - 1, k);
   }
 }
 
 int main(void)
 {
-  int arr[N] = {5, 7, 2, 9, 4, 1, 10, 3};
-  q1(arr);
-
+  int arr[N] = {5, 7, 2, 9, 4, 2, 10, 3};
+  int kmin = order_statistic(arr, 0, N - 1, 3);
+  printf("%d", kmin);
   return 0;
 }
